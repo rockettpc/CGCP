@@ -1,0 +1,164 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+
+  email                     String?         @unique
+  username                  String?         @unique
+  isAdmin                   Boolean         @default(false)
+
+  paymentProcessorUserId    String?         @unique
+  lemonSqueezyCustomerPortalUrl String?     // You can delete this if you're not using Lemon Squeezy as your payments processor.
+  subscriptionStatus        String?         // 'active', 'cancel_at_period_end', 'past_due', 'deleted'
+  subscriptionPlan          String?         // 'hobby', 'pro'
+  datePaid                  DateTime?
+  credits                   Int             @default(3)
+  units                     String          @default("mm") // 'mm' or 'in'
+
+  organization              Organization?   @relation(fields: [organizationId], references: [id])
+  organizationId            String?
+
+
+  contactFormMessages       ContactFormMessage[]
+  files                     File[]
+}
+
+model Organization {
+  id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+  name                      String
+  address                   String?
+  phone                     String?
+  email                     String?
+  website                   String?
+  users                     User[]
+  projects                  Project[]
+}
+
+model Project {
+  id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+  updatedAt                 DateTime        @updatedAt
+
+  organization              Organization    @relation(fields: [organizationId], references: [id])
+  organizationId            String
+
+  name                      String
+  address                   String?
+  contactName               String?
+  contactInfo               String? // Deprecated in favor of specific phone/email
+  contactPhone              String?
+  contactEmail              String?
+  measureDate               DateTime?
+  installDate               DateTime?
+  notes                     String?
+  jobNumber                 String?
+  status                    ProjectStatus   @default(InProgress)
+
+  calculations              Calculation[]
+}
+
+enum ProjectStatus {
+  InProgress
+  Quoted
+  Completed
+}
+
+model Calculation {
+  id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+  updatedAt                 DateTime        @updatedAt
+
+  project                   Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId                 String
+
+  template                  Template        @relation(fields: [templateId], references: [id])
+  templateId                String
+
+  // Inputs stored as JSON to be flexible, or specific fields if we want strict typing.
+  // Given the requirements, specific fields might be better for querying, but JSON is more flexible for different templates.
+  // The plan said "Stores templateId, inputs (chord, depth...), outputs".
+  // I'll use JSON for inputs/outputs to allow for different template types in the future easily.
+  inputs                    Json
+  outputs                   Json
+}
+
+model Template {
+  id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+  
+  name                      String          @unique
+  description               String?
+  imageUrl                  String?
+  
+  calculations              Calculation[]
+}
+
+
+
+model File {
+  id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+
+  user                      User            @relation(fields: [userId], references: [id])
+  userId                    String
+
+  name                      String
+  type                      String
+  s3Key                     String
+}
+
+model DailyStats {
+  id                               Int             @id @default(autoincrement())
+  date                             DateTime        @default(now()) @unique
+
+  totalViews                       Int             @default(0)
+  prevDayViewsChangePercent        String          @default("0")
+  userCount                        Int             @default(0)
+  paidUserCount                    Int             @default(0)
+  userDelta                        Int             @default(0)
+  paidUserDelta                    Int             @default(0)
+  totalRevenue                     Float           @default(0)
+  totalProfit                      Float           @default(0)
+
+  sources                          PageViewSource[]
+}
+
+model PageViewSource {
+  @@id([date, name])
+  name                     String
+  date                     DateTime        @default(now())
+
+  dailyStats               DailyStats?     @relation(fields: [dailyStatsId], references: [id])
+  dailyStatsId             Int?
+
+  visitors                 Int
+}
+
+model Logs {
+  id                       Int             @id @default(autoincrement())
+  createdAt                DateTime        @default(now())
+
+  message                  String
+  level                    String
+}
+
+model ContactFormMessage {
+  id                        String          @id @default(uuid())
+  createdAt                 DateTime        @default(now())
+
+  user                      User            @relation(fields: [userId], references: [id])
+  userId                    String
+
+  content                   String
+  isRead                    Boolean         @default(false)
+  repliedAt                 DateTime?
+}

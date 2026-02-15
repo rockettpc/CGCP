@@ -1,0 +1,179 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .chat-height {
+    @apply h-[calc(100vh_-_8.125rem)] lg:h-[calc(100vh_-_5.625rem)];
+  }
+  .inbox-height {
+    @apply h-[calc(100vh_-_8.125rem)] lg:h-[calc(100vh_-_5.625rem)];
+  }
+
+  /* Text gradient utilities */
+  .text-gradient-primary {
+    background: linear-gradient(
+      to right,
+      hsl(var(--secondary-muted)),
+      hsl(var(--secondary))
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-primary-diagonal {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--secondary-muted)),
+      hsl(var(--secondary))
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Border gradient utilities */
+  .border-gradient-primary {
+    background: linear-gradient(
+      to right,
+      hsl(var(--secondary-muted)),
+      hsl(var(--secondary))
+    );
+    padding: 1px;
+  }
+
+  .border-gradient-primary > * {
+    background: hsl(var(--background));
+  }
+}
+
+/* third-party libraries CSS */
+
+.tableCheckbox:checked ~ div span {
+  @apply opacity-100;
+}
+.tableCheckbox:checked ~ div {
+  @apply bg-primary border-primary;
+}
+
+.apexcharts-legend-text {
+  @apply !text-muted-foreground;
+}
+.apexcharts-text {
+  @apply !fill-muted-foreground;
+}
+.apexcharts-xcrosshairs {
+  @apply !fill-border;
+}
+.apexcharts-gridline {
+  @apply !stroke-border;
+}
+.apexcharts-series.apexcharts-pie-series path {
+  @apply dark:!stroke-transparent;
+}
+.apexcharts-legend-series {
+  @apply !inline-flex gap-1.5;
+}
+.apexcharts-tooltip.apexcharts-theme-light {
+  @apply dark:!bg-card dark:!border-border;
+}
+.apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title {
+  @apply dark:!bg-muted dark:!border-border;
+}
+.apexcharts-xaxistooltip,
+.apexcharts-yaxistooltip {
+  @apply dark:!bg-muted dark:!border-muted dark:!text-muted-foreground;
+}
+.apexcharts-xaxistooltip-bottom:after {
+  @apply dark:!border-b-muted;
+}
+.apexcharts-xaxistooltip-bottom:before {
+  @apply dark:!border-b-muted;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --card-accent: 210 40% 96%;
+    --card-accent-foreground: 222 47% 11%;
+    --card-subtle: 210 40% 96%;
+    --card-subtle-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222 47% 11.2%;
+    --secondary-muted: 217 19% 27%;
+    --secondary-muted-foreground: 210 40% 98%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 199 89% 48%;
+    --accent-foreground: 222 47% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --success: 141 71% 48%;
+    --success-foreground: 210 40% 98%;
+    --warning: 36 100% 50%;
+    --warning-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221 83% 53%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+    --card-accent: 217 33% 17%;
+    --card-accent-foreground: 210 40% 98%;
+    --card-subtle: 217 33% 17%;
+    --card-subtle-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 217 19% 27%;
+    --secondary-foreground: 210 40% 98%;
+    --secondary-muted: 217 19% 27%;
+    --secondary-muted-foreground: 210 40% 98%;
+    --muted: 217 19% 27%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 199 89% 48%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --success: 141 71% 48%;
+    --success-foreground: 210 40% 98%;
+    --warning: 36 100% 50%;
+    --warning-foreground: 210 40% 98%;
+    --border: 217 19% 27%;
+    --input: 217 19% 27%;
+    --ring: 224.3 76.3% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
